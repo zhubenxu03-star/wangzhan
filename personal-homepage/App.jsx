@@ -1,9 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MotionConfig, motion, useReducedMotion } from 'motion/react';
 import Aurora from './Aurora.jsx';
 import BlurText from './BlurText.jsx';
 import SpotlightCard from './SpotlightCard.jsx';
 import { profile, interests, notes } from './content.js';
+import Playground from './Playground.jsx';
+import Guestbook from './Guestbook.jsx';
+
+const pages = [
+  { id:'home', name:'首页', hint:'欢迎降落' },
+  { id:'about', name:'关于', hint:'认识一下' },
+  { id:'interests', name:'兴趣', hint:'好奇心收藏' },
+  { id:'notes', name:'随记', hint:'一些小念头' },
+  { id:'play', name:'游乐场', hint:'放松一下' },
+  { id:'guestbook', name:'留言', hint:'留下一点回响' },
+];
+function currentPage() {
+  const id = window.location.hash.slice(1);
+  return pages.some(page => page.id === id) ? id : 'home';
+}
 
 function Icon({ name, className = '' }) {
   return <svg className={className} viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -55,6 +70,23 @@ function OrbitArt() {
 export default function App() {
   const reduced = useReducedMotion();
   const [paused, setPaused] = useState(false);
+  const [page, setPage] = useState(currentPage);
+  const mainRef = useRef(null);
+  const previousPage = useRef(page);
+  const pageIndex = pages.findIndex(item => item.id === page);
+  useEffect(() => {
+    const syncPage = () => setPage(currentPage());
+    window.addEventListener('hashchange', syncPage);
+    return () => window.removeEventListener('hashchange', syncPage);
+  }, []);
+  useEffect(() => {
+    document.title = `${pages[pageIndex].name} · ${profile.siteName}`;
+    if (previousPage.current !== page) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      mainRef.current?.focus({ preventScroll: true });
+      previousPage.current = page;
+    }
+  }, [page, pageIndex]);
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     const sync = () => setVisible(!document.hidden);
@@ -63,18 +95,21 @@ export default function App() {
   }, []);
 
   return <MotionConfig reducedMotion="user"><div id="top" className={`site-shell${paused || reduced ? ' quiet' : ''}`}>
-    <a className="skip-link" href="#main">跳到正文</a>
+    <a className="skip-link" href="#main" onClick={event => { event.preventDefault(); mainRef.current?.focus(); mainRef.current?.scrollIntoView(); }}>跳到正文</a>
     <div className="hero-backdrop" aria-hidden="true">
-      <Aurora colorStops={['#78d9bd','#8255e8','#b5a0ff']} amplitude={.85} blend={.7} height={.38} glow={.9} brightness={.75} speed={.4} layers={2} intro={false} dpr={1} paused={paused || reduced || !visible} mouseInteraction={!reduced} />
+      <Aurora colorStops={['#78d9bd','#8255e8','#b5a0ff']} amplitude={.85} blend={.7} height={.38} glow={.9} brightness={.75} speed={.4} layers={2} intro={false} dpr={.65} paused={paused || reduced || !visible || page !== 'home'} mouseInteraction={!reduced && page === 'home'} />
     </div>
     <div className="page-wrap">
       <header className="header">
-        <a className="brand" href="#top" aria-label={`${profile.siteName}，返回顶部`}><Icon name="spark"/><span>{profile.siteName}<small>MY PERSONAL SPACE</small></span></a>
-        <nav aria-label="主导航"><a href="#about">关于我</a><a href="#interests">兴趣宇宙</a><a href="#notes">随手记录</a></nav>
+        <a className="brand" href="#home" aria-label={`${profile.siteName}，返回首页`}><Icon name="spark"/><span>{profile.siteName}<small>MY PERSONAL SPACE</small></span></a>
+        <nav aria-label="主导航">{pages.map(item => <a key={item.id} href={`#${item.id}`} aria-current={page === item.id ? "page" : undefined}>{item.name}</a>)}</nav>
         <a className="github-link" href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开我的 GitHub"><Icon name="github"/><span>GitHub</span><span aria-hidden="true">↗</span></a>
       </header>
-      <main id="main">
-        <section className="hero" aria-labelledby="hero-title">
+      <main id="main" ref={mainRef} tabIndex={-1} className={`page-content page-${page}`}>
+        {page !== 'home' && <h1 className="sr-only">{pages[pageIndex].name} · {profile.siteName}</h1>}
+        <div className="page-location"><span><span className="status-dot"/> ZBX / PERSONAL SPACE</span><span>{String(pageIndex + 1).padStart(2,"0")} — {pages[pageIndex].hint}</span></div>
+        <div key={page} className="page-enter">
+        {page === 'home' && <section className="hero" aria-labelledby="hero-title">
           <div className="hero-copy">
             <div className="hello-label"><span className="status-dot"/> HELLO, INTERNET. <span className="mini-line"/> 欢迎降落</div>
             <h1 id="hero-title" className="sr-only">{profile.tagline}</h1>
@@ -82,27 +117,34 @@ export default function App() {
               {reduced ? <><p>保持好奇，</p><p className="accent-title">认真好玩。</p></> : <><BlurText text="保持好奇，" animateBy="letters" delay={60} direction="bottom" trigger="load" blur={8} distance={25} stepDuration={.24}/><BlurText text="认真好玩。" className="accent-title" animateBy="letters" delay={90} direction="bottom" trigger="load" blur={10} distance={30} stepDuration={.32}/></>}
             </div>
             <p className="hero-description">{profile.intro}</p>
-            <div className="hero-actions"><a className="primary-button" href="#interests">进入我的宇宙 <Icon name="arrow"/></a><a className="text-link" href="#about">认识一下 <span aria-hidden="true">↘</span></a></div>
+            <div className="hero-actions"><a className="primary-button" href="#play">去游乐场玩玩 <Icon name="arrow"/></a><a className="text-link" href="#about">认识一下 <span aria-hidden="true">↘</span></a></div>
             <div className="hero-caption"><span>生活玩家 / 好奇心收藏家</span><span className="caption-stars" aria-hidden="true">✦ ✧ ✦</span></div>
           </div>
           <OrbitArt/>
-          <div className="hero-bottom"><a href="#about" className="scroll-hint"><span className="scroll-line"/> 向下探索 <span>SCROLL TO EXPLORE</span></a><button type="button" className="motion-toggle" aria-pressed={paused} onClick={()=>setPaused(value=>!value)} disabled={Boolean(reduced)}><Icon name={paused || reduced ? 'play':'pause'}/>{reduced ? '已跟随系统减少动效' : paused ? '继续背景动效' : '暂停背景动效'}</button></div>
-        </section>
-        <section id="about" className="section about-section" aria-labelledby="about-title">
+          <div className="hero-bottom"><a href="#about" className="scroll-hint"><span className="scroll-line"/> 翻到下一页 <span>TURN THE PAGE</span></a><button type="button" className="motion-toggle" aria-pressed={paused} onClick={()=>setPaused(value=>!value)} disabled={Boolean(reduced)}><Icon name={paused || reduced ? 'play':'pause'}/>{reduced ? '已跟随系统减少动效' : paused ? '继续背景动效' : '暂停背景动效'}</button></div>
+        </section>}
+        {page === 'about' && <section id="about" className="section about-section" aria-labelledby="about-title">
           <Reveal className="about-heading"><p className="eyebrow">01 / A LITTLE ABOUT ME</p><h2 id="about-title">不必定义自己，<br/><span>探索就很有意思。</span></h2><div className="about-tags"><span>保持好奇</span><span>持续折腾</span><span>享受当下</span></div></Reveal>
           <Reveal className="about-copy"><p>{profile.about}</p><div className="status-list"><div><span>最近在做</span><strong>把小想法变成看得见的东西</strong></div><div><span>灵感来源</span><strong>互联网，以及互联网之外</strong></div><div><span>生活主张</span><strong>允许普通，也允许与众不同 <span aria-hidden="true">✳</span></strong></div></div></Reveal>
-        </section>
-        <section id="interests" className="section interests-section" aria-labelledby="interests-title">
+        </section>}
+        {page === 'interests' && <section id="interests" className="section interests-section" aria-labelledby="interests-title">
           <Reveal className="section-heading"><div><p className="eyebrow">02 / MY LITTLE UNIVERSE</p><h2 id="interests-title">最近的兴趣，<span>不设边界。</span></h2></div><p className="section-aside">不赶路的时候，<br/>就去做一点喜欢的事。</p></Reveal>
           <div className="interests-grid">{interests.map(interest=><Reveal key={interest.id}><SpotlightCard className={`interest-card card-${interest.icon}`} spotlightColor={interest.color} spotlightSize={320} intensity={.12} borderGlow={.75} proximity={70} smoothing={.3} flare={false} style={{'--spotlight-card-surface':'#121217'}}><div className="card-heading"><span>{interest.category}</span><span>{interest.id} /</span></div><div className="interest-visual" style={{'--card-color':interest.color}}><div className="icon-orbit"/><Icon name={interest.icon}/><span className="visual-spark" aria-hidden="true">✦</span></div><h3>{interest.title}</h3><p>{interest.description}</p><div className="card-tags">{interest.tags.map(tag=><span key={tag}>{tag}</span>)}</div></SpotlightCard></Reveal>)}</div>
-        </section>
-        <section id="notes" className="section notes-section" aria-labelledby="notes-title">
+        </section>}
+        {page === 'notes' && <section id="notes" className="section notes-section" aria-labelledby="notes-title">
           <Reveal className="section-heading"><div><p className="eyebrow">03 / NOTES FROM MY ORBIT</p><h2 id="notes-title">一些没被划走的<span>念头。</span></h2></div><p className="section-aside">不一定深刻，但足够真实。<br/>点开，读一小段 <span aria-hidden="true">↙</span></p></Reveal>
           <Reveal><div className="note-list">{notes.map((note,index)=><details key={note.title}><summary><span className="note-number">0{index+1}</span><span className="note-type">{note.type}</span><span className="note-title">{note.title}</span><span className="note-expand" aria-hidden="true">+</span></summary><p>{note.text}</p></details>)}</div></Reveal>
-        </section>
-        <Reveal className="closing"><div className="closing-star" aria-hidden="true"><Icon name="spark"/></div><p className="eyebrow">THANKS FOR STOPPING BY</p><h2>宇宙很大，<br/>很高兴在这里遇见你<span>。</span></h2><a className="text-link" href={profile.github} target="_blank" rel="noopener noreferrer">去 GitHub 串个门 <Icon name="arrow"/></a></Reveal>
+        </section>}
+        {page === 'play' && <Playground paused={paused || reduced}/>}
+        {page === 'guestbook' && <Guestbook/>}
+        </div>
+        <nav className="page-turner" aria-label="页面翻页">
+          {pageIndex > 0 ? <a className="turn-button" href={`#${pages[pageIndex - 1].id}`} rel="prev"><span aria-hidden="true">←</span><span>上一页<small>{pages[pageIndex - 1].name}</small></span></a> : <span className="turn-placeholder">旅程从这里开始</span>}
+          <div className="page-dots">{pages.map((item,index) => <a href={`#${item.id}`} key={item.id} aria-label={`第 ${index + 1} 页：${item.name}`} aria-current={page === item.id ? 'page' : undefined}>{String(index + 1).padStart(2,'0')}</a>)}</div>
+          {pageIndex < pages.length - 1 ? <a className="turn-button turn-next" href={`#${pages[pageIndex + 1].id}`} rel="next"><span>下一页<small>{pages[pageIndex + 1].name}</small></span><span aria-hidden="true">→</span></a> : <a className="turn-button turn-next" href="#home"><span>再逛一圈<small>返回首页</small></span><span aria-hidden="true">↗</span></a>}
+        </nav>
       </main>
-      <footer><a className="footer-brand" href="#top"><Icon name="spark"/>{profile.siteName}</a><span>© {new Date().getFullYear()} · 保持好奇，认真好玩。</span><div><a href={profile.source} target="_blank" rel="noopener noreferrer">网站源码 ↗</a><a href="#top">回到顶部 ↑</a></div></footer>
+      <footer><a className="footer-brand" href="#home"><Icon name="spark"/>{profile.siteName}</a><span>© {new Date().getFullYear()} · 保持好奇，认真好玩。</span><div><a href={profile.source} target="_blank" rel="noopener noreferrer">网站源码 ↗</a><a href="#home">返回首页 ↗</a></div></footer>
     </div>
   </div></MotionConfig>;
 }

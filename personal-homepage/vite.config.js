@@ -8,6 +8,8 @@ export default defineConfig({
     name: 'react-bits-license',
     generateBundle() {
       this.emitFile({ type: 'asset', fileName: 'react-bits.LICENSE.txt', source: readFileSync(new URL('./react-bits.LICENSE.txt', import.meta.url), 'utf8') });
+      this.emitFile({ type: 'asset', fileName: '_worker.js', source: readFileSync(new URL('./pages-worker.js', import.meta.url), 'utf8') });
+      this.emitFile({ type: 'asset', fileName: '_routes.json', source: JSON.stringify({ version: 1, include: ['/api/*'], exclude: [] }) });
     },
   }],
 });
