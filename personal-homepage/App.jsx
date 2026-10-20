@@ -26,7 +26,6 @@ function Icon({ name, className = '' }) {
     {name === 'code' && <><rect x="2" y="5" width="28" height="22" rx="5"/><path d="m12 11-5 5 5 5m8-10 5 5-5 5m-2-12-4 14"/></>}
     {name === 'camera' && <><path d="M3 10h6l3-5h8l3 5h6v17H3Z"/><circle cx="16" cy="18" r="5"/><path d="M25 13h.01"/></>}
     {name === 'planet' && <><circle cx="16" cy="16" r="9"/><ellipse cx="16" cy="16" rx="16" ry="5" transform="rotate(-30 16 16)"/><path d="m25 3 1-2m4 6 2-1"/></>}
-    {name === 'github' && <path d="M12 27c-7 2-7-3-10-3m20 7v-5c0-1-.4-2-1-3 5-.6 10-2 10-10a8 8 0 0 0-2-5 8 8 0 0 0-.2-5s-2-.7-6 2a22 22 0 0 0-11 0c-4-2.7-6-2-6-2a8 8 0 0 0-.2 5 8 8 0 0 0-2 5c0 8 5 9.4 10 10-.6.8-1 2-1 3v5" transform="translate(1 0) scale(.9)"/>}
     {name === 'arrow' && <path d="M7 25 25 7M7 7h18v18"/>}
     {name === 'pause' && <path d="M11 7v18M21 7v18"/>}
     {name === 'play' && <path d="m11 6 15 10-15 10Z"/>}
@@ -103,7 +102,6 @@ export default function App() {
       <header className="header">
         <a className="brand" href="#home" aria-label={`${profile.siteName}，返回首页`}><Icon name="spark"/><span>{profile.siteName}<small>MY PERSONAL SPACE</small></span></a>
         <nav aria-label="主导航">{pages.map(item => <a key={item.id} href={`#${item.id}`} aria-current={page === item.id ? "page" : undefined}>{item.name}</a>)}</nav>
-        <a className="github-link" href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开我的 GitHub"><Icon name="github"/><span>GitHub</span><span aria-hidden="true">↗</span></a>
       </header>
       <main id="main" ref={mainRef} tabIndex={-1} className={`page-content page-${page}`}>
         {page !== 'home' && <h1 className="sr-only">{pages[pageIndex].name} · {profile.siteName}</h1>}
@@ -144,7 +142,7 @@ export default function App() {
           {pageIndex < pages.length - 1 ? <a className="turn-button turn-next" href={`#${pages[pageIndex + 1].id}`} rel="next"><span>下一页<small>{pages[pageIndex + 1].name}</small></span><span aria-hidden="true">→</span></a> : <a className="turn-button turn-next" href="#home"><span>再逛一圈<small>返回首页</small></span><span aria-hidden="true">↗</span></a>}
         </nav>
       </main>
-      <footer><a className="footer-brand" href="#home"><Icon name="spark"/>{profile.siteName}</a><span>© {new Date().getFullYear()} · 保持好奇，认真好玩。</span><div><a href={profile.source} target="_blank" rel="noopener noreferrer">网站源码 ↗</a><a href="#home">返回首页 ↗</a></div></footer>
+      <footer><a className="footer-brand" href="#home"><Icon name="spark"/>{profile.siteName}</a><span>© {new Date().getFullYear()} · 保持好奇，认真好玩。</span><div><a href="#home">返回首页 ↗</a></div></footer>
     </div>
   </div></MotionConfig>;
 }

@@ -29,7 +29,7 @@ npm run preview
 
 ## 修改个人资料
 
-主要编辑 `content.js`，可改站名、自我介绍、GitHub 链接、兴趣和随记。现有兴趣和随记是示例文案。标题与视觉布局在 `App.jsx`，配色和响应式排版在 `style.css`。浏览器标题、描述在 `index.html`。
+主要编辑 `content.js`，可改站名、自我介绍、兴趣和随记。现有兴趣和随记是示例文案。标题与视觉布局在 `App.jsx`，配色和响应式排版在 `style.css`。浏览器标题、描述在 `index.html`。
 
 ## Cloudflare Pages：连接 GitHub 自动部署
 

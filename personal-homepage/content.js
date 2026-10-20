@@ -4,8 +4,6 @@ export const profile = {
   tagline: '保持好奇，认真好玩。',
   intro: '一个普通人的互联网自留地。记录一点日常，折腾一点新东西，让偶尔冒出来的灵感，都有地方降落。',
   about: '喜欢有意思的东西，也享受把一个小想法慢慢做出来的过程。这个小站是我的数字游乐场，放些兴趣、随想，和生活里值得记住的小事。没有标准答案，只有正在发生的探索。',
-  github: 'https://github.com/zhubenxu03-star',
-  source: 'https://github.com/zhubenxu03-star/wangzhan/tree/main/personal-homepage',
 };
 
 export const interests = [
