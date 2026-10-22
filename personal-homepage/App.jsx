@@ -6,6 +6,7 @@ import SpotlightCard from './SpotlightCard.jsx';
 import { profile, interests, notes } from './content.js';
 import Playground from './Playground.jsx';
 import Guestbook from './Guestbook.jsx';
+import CreatorHub from './CreatorHub.jsx';
 
 const pages = [
   { id:'home', name:'首页', hint:'欢迎降落' },
@@ -13,6 +14,7 @@ const pages = [
   { id:'interests', name:'兴趣', hint:'好奇心收藏' },
   { id:'notes', name:'随记', hint:'一些小念头' },
   { id:'play', name:'游乐场', hint:'放松一下' },
+  { id:'creatorhub', name:'创作台', hint:'内容创作工作台' },
   { id:'guestbook', name:'留言', hint:'留下一点回响' },
 ];
 function currentPage() {
@@ -134,6 +136,7 @@ export default function App() {
           <Reveal><div className="note-list">{notes.map((note,index)=><details key={note.title}><summary><span className="note-number">0{index+1}</span><span className="note-type">{note.type}</span><span className="note-title">{note.title}</span><span className="note-expand" aria-hidden="true">+</span></summary><p>{note.text}</p></details>)}</div></Reveal>
         </section>}
         {page === 'play' && <Playground paused={paused || reduced}/>}
+        {page === 'creatorhub' && <CreatorHub/>}
         {page === 'guestbook' && <Guestbook/>}
         </div>
         <nav className="page-turner" aria-label="页面翻页">

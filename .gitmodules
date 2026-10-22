@@ -1,0 +1,3 @@
+[submodule "creatorhub"]
+	path = creatorhub
+	url = https://github.com/3441293738/creatorhub.git

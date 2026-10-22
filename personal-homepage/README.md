@@ -1,8 +1,20 @@
 # 我的小宇宙
 
-个人主页：https://zbx.pages.dev/ 。六页导航、深色青紫极光、可展开随记、连线星空、灵感抽签、15 秒收集星星小游戏，以及支持表情的公开留言区。使用 React + Vite，直接集成 React Bits 的 Aurora、BlurText 和 SpotlightCard 组件。
+个人主页：https://zbx.pages.dev/ 。七页导航、深色青紫极光、可展开随记、连线星空、灵感抽签、15 秒收集星星小游戏、CreatorHub 本机工作台入口，以及支持表情的公开留言区。使用 React + Vite，直接集成 React Bits 的 Aurora、BlurText 和 SpotlightCard 组件。
 
 本目录是独立的个人主页项目。
+
+## CreatorHub 创作台
+
+网站导航的「创作台」（`#creatorhub`）可打开完整的本机 CreatorHub：`http://127.0.0.1:8000/`。在网站仓库根目录双击 `start-creatorhub.cmd`，服务启动后即可使用；关闭服务后，再次使用时重新启动。首次运行自动安装依赖，需要联网与 Python 3.10+。平台账号由使用者自行扫码登录。
+
+CreatorHub 源码通过根目录的 `creatorhub/` Git 子模块引入，上游为 https://github.com/3441293738/creatorhub ，当前固定提交为 `1ab546112f0b7670f02a69ad92f7fbca436a15c0`。重新克隆本网站后，启动脚本会初始化子模块，也可在仓库根目录执行 `git submodule update --init --depth 1 creatorhub`。
+
+完整后端和浏览器自动化在当前电脑运行；Cloudflare Pages 部署网站入口。点击入口会在新标签页打开本机服务。上游禁止 iframe 嵌入，保留其本机访问与同源检查。换设备需在对应设备安装和启动服务。
+
+账号、Cookie、SQLite 数据库和下载媒体位于 `creatorhub/data/`，设置位于 `creatorhub/config.yaml`，依赖位于 `creatorhub/.venv/`；这些都被子模块忽略，不会提交到网站仓库。原有留言 API 和 Cloudflare D1 配置不受影响。
+
+检查运行环境：在仓库根目录运行 `.\start-creatorhub.cmd check`。更新上游版本前备份 `creatorhub/data/` 与 `creatorhub/config.yaml`，再检查上游变更并更新子模块固定提交。
 
 ## 本地运行
 
@@ -75,7 +87,7 @@ D1 与 Pages Functions 有免费额度，当前项目使用免费计划；超过
 
 ## 动效与兼容
 
-- 六页 hash 导航支持刷新、直接分享、浏览器前进/后退；底部带页码和前后翻页。
+- 七页 hash 导航支持刷新、直接分享、浏览器前进/后退；底部带页码和前后翻页。
 - 连线星空可重新画，灵感卡连续不重复，游戏最高记录保存在当前浏览器。
 - 留言支持表情插入、头像、分页、草稿恢复和失败后重试；文本按纯文字渲染。
 - 提供“暂停背景动效”按钮，并跟随系统的减少动态效果设置。

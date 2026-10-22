@@ -1,0 +1,22 @@
+.creatorhub-panel{display:grid;grid-template-columns:1.15fr 1fr;gap:65px;padding:38px;border:1px solid #c3aff824;border-radius:16px;background:linear-gradient(125deg,#c3aff80d,#91e0d105)}
+.creatorhub-label{display:inline-block;padding:6px 10px;border-radius:5px;background:#a3edc610;color:#a3d8bf;font-size:10px;letter-spacing:1px}
+.creatorhub-intro h3{margin:22px 0 14px;font-size:36px;letter-spacing:-1px;font-weight:500}
+.creatorhub-intro>p{color:#a29aac;font-size:13px;line-height:2;margin:0 0 25px}
+.creatorhub-intro .primary-button{font-size:12px}
+.creatorhub-intro .creatorhub-address{margin:17px 0 0;font-size:10px;color:#81748f;overflow-wrap:anywhere}
+.creatorhub-address code{margin-left:10px;font-size:11px;color:#b2a3c5}
+.creatorhub-features{margin:0;align-self:center}
+.creatorhub-features>div{padding:20px 0;border-bottom:1px solid var(--line)}
+.creatorhub-features>div:first-child{padding-top:0}
+.creatorhub-features dt{font-size:14px;color:#d8c9ed;margin-bottom:9px}
+.creatorhub-features dd{font-size:12px;line-height:1.9;color:#91859f;margin:0}
+.creatorhub-start{margin-top:35px}
+.creatorhub-start h3{font-size:15px;font-weight:500;color:#d8c9ed}
+.creatorhub-start ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:35px;margin:25px 0;padding-left:22px;color:var(--violet);font-size:12px}
+.creatorhub-start li{padding-left:5px}
+.creatorhub-start strong{color:#beb4cc;font-weight:500}
+.creatorhub-start li p,.creatorhub-help{color:#91859f;font-size:12px;line-height:2}
+.creatorhub-start code{color:#b2a3c5;overflow-wrap:anywhere}
+.creatorhub-help{padding-top:20px;border-top:1px solid var(--line);margin-bottom:0}
+@media(max-width:760px){.creatorhub-panel{gap:30px;padding:28px}.creatorhub-intro h3{font-size:30px}.creatorhub-start ol{gap:22px}.header nav{overflow-x:auto;justify-content:flex-start}.header nav a{flex:none}}
+@media(max-width:580px){.creatorhub-panel{grid-template-columns:1fr;gap:30px;padding:25px}.creatorhub-intro h3{font-size:32px}.creatorhub-start ol{grid-template-columns:1fr;gap:12px}.creatorhub-features>div{padding:16px 0}.creatorhub-start li p{margin-bottom:0}}
